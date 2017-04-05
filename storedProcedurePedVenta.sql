@@ -45,7 +45,7 @@ AS
 SET NOCOUNT ON
 --declaracion de variables a utilizar el sl SP
 DECLARE @ConsultaSQL varchar(1500)		--Para almacenar la consulta base
-DECLARE @CondicionSQL varchar(500)		--Para guardar la condicion dinaminca
+DECLARE @CondicionSQL varchar(500)		--Para guardar la condición dinámica
 --inicializando variables
 SET @ConsultaSQL = ''
 SET @CondicionSQL = ''
@@ -70,8 +70,8 @@ IF @FechaFin <>''		SET @CondicionSQL += ' AND DATEDIFF(dd, '''+@FechaFin+''', Pe
 IF @Serie <>''			SET @CondicionSQL += ' AND '''+@Serie+''' = PedCab.@Serie'
 IF @Surtido <>'T'		SET @CondicionSQL += ' AND '''+@Surtido+''' = PedCab.Surtido'
 
---La consulta base sera siempre la misma(estática) ... ojo agregando al final la condiciín  "WHERE 1=1" esto con el fin de concatenar 
---cualquier condicion que se cumpla P.E: si se cumple unicamente la 3ra condicion la condicion final seria .... WHERE 1=1 AND 'IKDKSH' = PedCab.CodZona 
+--La consulta base sera siempre la misma(estática) ... ojo agregando al final la condición  "WHERE 1=1" esto con el fin de concatenar 
+--cualquier condición que se cumpla P.E: si se cumple únicamente la 3ra condición la condición final seria .... WHERE 1=1 AND 'IKDKSH' = PedCab.CodZona 
 SET @ConsultaSQL ='SELECT PedCab.idDocumento, PedCab.Serie, PedCab.NumPedido, PedCab.CodCliente, PedCab.NomFiscal, PedCab.RFC, PedCab.Calle, PedCab.NumExterior, PedCab.NumInterior, PedCab.Localidad, PedCab.CodEstado, PedCab.Pais, PedCab.DiasCredito, PedCab.CodZona, PedCab.CodAgente, PedCab.FechaExpedicion, PedCab.FechaVencimiento, PedCab.FechaSurtido, PedCab.TotalNetoSinImp, PedCab.TotalDocumento, PedCab.TotalImpuesto1, PedCab.Usuario, PedCab.Observaciones, PedCab.DiasCredito, '+
     ' PedDet.Partida, PedDet.ClaveArticulo, PedDet.Descripcion, PedDet.PrecioNeto, PedDet.Cantidad, PedDet.ImportePartida, PedDet.CantidadAdicional1, PedDet.SurtidoCantidad,'+
     ' CatClientes.Telefono,'+
@@ -80,8 +80,8 @@ SET @ConsultaSQL ='SELECT PedCab.idDocumento, PedCab.Serie, PedCab.NumPedido, Pe
 	' JOIN PedDet ON PedCab.idMovimiento = PedDet.idMovimiento'+
 	' JOIN CatClientes ON PedCab.CodCliente = CatClientes.CodCliente'+
 	' LEFT JOIN Medidas ON PedDet.UnMedida = Medidas.Unidad WHERE 1=1 '
---condición (opcional) si se generó una conidición, entonces concatena la consulta base(@ConsultaSQL) + la condicion generada (@CondicionSQL)
+--condición (opcional) si se generó una conidición, entonces concatena la consulta base(@ConsultaSQL) + la condición generada (@CondicionSQL)
 --o simplemente eliminar la condición (IF @CondicionSQL <> '') y concatenanarlas directamente dara el mismo resultado :)
 IF @CondicionSQL <> ''	SET @ConsultaSQL+=@CondicionSQL
---La sentencia (EXEC) permite ejecutar una cadena de caracteres que representa una sentencia SQL ==> que es la consulta que hemos generado
+--La sentencia (EXEC) permite ejecutar una cadena de caracteres que representa una sentencia SQL ==>consulta que hemos generado
 EXEC(@ConsultaSQL)
